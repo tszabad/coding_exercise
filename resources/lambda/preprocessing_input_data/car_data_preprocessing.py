@@ -33,6 +33,7 @@ def preprocess_data(df):
 # Function to save preprocessed data back to S3
 def save_preprocessed_data(df, bucket_name, s3_file_name):
     csv_buffer = df.to_csv(index=False)
+    s3_file_name = f'{s3_file_name.replace(".csv", "")}_preprocessed.csv'
     s3_client.put_object(Bucket=bucket_name, Key=s3_file_name, Body=csv_buffer)
 
 # Lambda handler function
