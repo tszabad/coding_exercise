@@ -30,15 +30,6 @@ jobs:
         with:
           terraform_version: 1.14.0
 
-      - name: Ensure Terraform state bucket exists
-        working-directory: '.'
-        run: |
-          aws s3api head-bucket --bucket snapsoft-homework-tf-state-tsz 2>/dev/null || \
-          aws s3api create-bucket \
-            --bucket snapsoft-homework-tf-state-tsz \
-            --region eu-north-1 \
-            --create-bucket-configuration LocationConstraint=eu-north-1
-
       - name: Terraform Init
         run: terraform init
 
@@ -55,15 +46,6 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.14.0
-
-      - name: Ensure Terraform state bucket exists
-        working-directory: '.'
-        run: |
-          aws s3api head-bucket --bucket snapsoft-homework-tf-state-tsz 2>/dev/null || \
-          aws s3api create-bucket \
-            --bucket snapsoft-homework-tf-state-tsz \
-            --region eu-north-1 \
-            --create-bucket-configuration LocationConstraint=eu-north-1
 
       - name: Terraform Init
         run: terraform init

@@ -10,12 +10,6 @@ variable "pandas_layer_arn" {
 
 
 
-variable "bucket_name" {
-  type        = string
-  description = "Name of the S3 bucket for storing Terraform state"
-  default     = "snapsoft-homework-tf-state-tsz"
-}
-
 
 variable "bucket_curated_zone" {
   type        = string
