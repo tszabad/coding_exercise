@@ -81,27 +81,18 @@ data "archive_file" "lambda_zip" {
 
 # IAM execution role
 
-resource "aws_iam_role" "lambda_exec" {
+data "aws_iam_role" "lambda_exec" {
   name = "preprocessing_input_data-role-9mmvm4mx"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect    = "Allow"
-      Principal = { Service = "lambda.amazonaws.com" }
-      Action    = "sts:AssumeRole"
-    }]
-  })
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
-  role       = aws_iam_role.lambda_exec.name
+  role       = data.aws_iam_role.lambda_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 resource "aws_iam_role_policy" "lambda_s3" {
   name = "preprocessing-lambda-s3-policy"
-  role = aws_iam_role.lambda_exec.id
+  role = data.aws_iam_role.lambda_exec.name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -124,7 +115,7 @@ resource "aws_iam_role_policy" "lambda_s3" {
 
 resource "aws_lambda_function" "preprocessing" {
   function_name    = "car-data-preprocessing"
-  role             = aws_iam_role.lambda_exec.arn
+  role             = data.aws_iam_role.lambda_exec.arn
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   handler          = "car_data_preprocessing.lambda_handler"
