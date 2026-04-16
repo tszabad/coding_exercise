@@ -119,7 +119,7 @@ resource "aws_lambda_function" "preprocessing" {
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   handler          = "car_data_preprocessing.lambda_handler"
-  runtime          = "python3.14"
+  runtime          = "python3.12"
   timeout          = 60
   memory_size      = 256
 
