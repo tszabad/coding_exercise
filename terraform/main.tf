@@ -18,7 +18,9 @@ data "aws_s3_bucket" "landing_bucket" {
   bucket = "tamas-s3-landing-bucket-772498065476-eu-north-1-an"
 }
 
-# Create S3 bucket
+
+##########################################################
+# Create S3 buckets
 resource "aws_s3_bucket" "tf_state_bucket" {
   bucket = var.bucket_name
 
@@ -117,6 +119,8 @@ resource "aws_s3_bucket_public_access_block" "curated_zone_bucket" {
   restrict_public_buckets = true
 }
 
+
+##########################################
 # Lambda deployment package
 
 data "archive_file" "lambda_zip" {

@@ -16,7 +16,7 @@ env:
 
 defaults:
   run:
-    working-directory: coding_exercise/terraform
+    working-directory: terraform
 
 jobs:
   plan:
