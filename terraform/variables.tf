@@ -6,7 +6,7 @@ variable "aws_region" {
 variable "pandas_layer_arn" {
   description = "ARN of the AWS SDK Pandas Lambda layer"
   type        = string
-  default     = "arn:aws:lambda:eu-north-1:336392948345:layer:AWSSDKPandas-Python314:2"
+  default     = "arn:aws:lambda:eu-north-1:336392948345:layer:AWSSDKPandas-Python312:22"
 }
 
 
