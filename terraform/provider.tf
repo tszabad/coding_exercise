@@ -4,7 +4,7 @@ terraform {
   backend "s3" {
     bucket = "snapsoft-homework-tf-state-tsz"
     key    = "terraform.tfstate"
-    region = var.aws_region
+    region = "eu-north-1"
   }
 }
 
