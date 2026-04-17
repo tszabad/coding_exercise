@@ -1,3 +1,11 @@
+'''
+This module contains the Lambda function for preprocessing car data. 
+It reads a CSV file from S3, validates the columns, file type and if file is empty and 
+preprocesses the data by removing non-predictive columns and handling missing values, and saves 
+the preprocessed data to another S3 bucket.
+'''
+
+
 import json
 import os
 import pandas as pd
@@ -18,6 +26,21 @@ s3_client = boto3.client('s3')
 
 NON_PREDICTIVE_COLS = ['car_ID', 'CarName', 'ownername', 'owneremail', 'dealershipaddress', 'saledate', 'iban']
 REQUIRED_COLS = ['Price', 'fueltype', 'enginesize']
+EXPECTED_COLS = ['car_ID', 'CarName', 'ownername', 'owneremail', 'dealershipaddress', 'saledate', 
+                 'iban', 'fueltype', 'aspiration', 'doornumber', 'carbody', 'drivewheel', 
+                 'enginelocation', 'wheelbase', 'color', 'carlength', 'carwidth', 'carheight', 
+                 'curbweight', 'cylindernumber', 'enginesize', 'compressionratio', 'horsepower', 
+                 'peakrpm', 'citympg', 'highwaympg', 'Price']
+
+
+# Function to validate columns
+def check_headers(df):
+    missing = [col for col in EXPECTED_COLS if col not in df.columns]
+    if missing:
+        logger.error("Header check failed. Missing columns: %s", missing)
+        return False, missing
+    logger.info("Header check passed — all %d expected columns present.", len(EXPECTED_COLS))
+    return True, []
 
 # Function to read data from S3
 def get_source_data(bucket_name, s3_file_name):
@@ -61,6 +84,16 @@ def lambda_handler(event, context):
             }
 
         logger.info(f"Loaded dataframe shape: {df.shape}")
+        # Validate headers
+        valid, missing_cols = check_headers(df)
+        if not valid:
+            logger.error(f"Missing expected columns: {missing_cols}")
+            return {
+                'statusCode': 400,
+                'body': json.dumps(f'Missing expected columns: {missing_cols}')
+            }
+        logger.info("All expected columns are present. Proceeding with preprocessing.")
+
         # Process the data
         df = preprocess_data(df)
         save_preprocessed_data(df, target_bucket_name, s3_file_name)
